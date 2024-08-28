@@ -14,7 +14,17 @@ This project demonstrates authentication and authorization using JSON Web Tokens
   
 - **Middleware for Route Protection:** 
   - Secure routes using server-side middleware that verifies the validity of JWT tokens before granting access.
-
+## routes
+- frontend
+   - /signup
+   - /login
+   - /profile
+- backend
+   - auth/signup
+   - auth/login
+   - user/profile
+   - auth/accessToken
+   - auth/refreshToken
 ## Installation
 
 1. Clone the repository:
