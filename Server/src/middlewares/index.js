@@ -3,9 +3,10 @@ const jwt = require("jsonwebtoken");
 const verifyAccessToken = async (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
+  console.log(token);
   
-  
-  if (!token) {
+   
+  if (token === "null") {
     return res.status(401).json({ message: 'Access token missing or invalid' });
   }
 

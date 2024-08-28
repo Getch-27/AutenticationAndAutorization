@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToken } from "../context/TokenContext";
 
 export default function Login() {
@@ -77,9 +77,7 @@ export default function Login() {
       <div class="mt-4 text-center">
         <p class="text-sm text-gray-600">
           Don't have an account?{" "}
-          <a href="/signup" class="text-blue-500 hover:underline">
-            Sign up
-          </a>
+          {<Link to = "/signup" className="text-blue-500 hover:underline">Sign up</Link>}
         </p>
       </div>
     </form>

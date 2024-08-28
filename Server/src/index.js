@@ -22,7 +22,7 @@ async function startServer() {
   app.use("/api", routes);
 
   app.use((err, req, res) => {
-    logger.error(err.stack);
+    console.log(err);
     res.status(err.status || 500).send({ error: err.mesaage });
   });
 

@@ -22,17 +22,30 @@ const Profile = () => {
         );
         setUserData(response.data);
       } catch (error) {
-        if (error.response && error.response.status === 401) {
-          // handle token expiration error
+        if (error.response?.status === 401) {
           const refreshToken = localStorage.getItem("refreshToken");
+  
           if (refreshToken) {
             try {
               const tokenResponse = await axios.post(
                 "http://localhost:3000/api/auth/refreshToken",
                 { refreshToken }
               );
-              setToken(tokenResponse.data.accessToken); // Update the token in the context
-              fetchProfile(); // Retry with the new token
+  
+              // Ensure the new token is set before retrying the fetchProfile call
+              setToken(tokenResponse.data.accessToken);
+              console.log(tokenResponse.data.accessToken);
+  
+              // Retry fetching the profile with the new token
+              const newResponse = await axios.get(
+                "http://localhost:3000/api/users/profile",
+                {
+                  headers: {
+                    authorization: `Bearer ${tokenResponse.data.accessToken}`,
+                  },
+                }
+              );
+              setUserData(newResponse.data);
             } catch (refreshError) {
               console.error("Token refresh failed", refreshError);
               navigate("/login");
@@ -45,34 +58,35 @@ const Profile = () => {
         }
       }
     };
-
+  
     fetchProfile();
-  }, [token, setToken, navigate]);
+  }, [token, navigate]); // 'token' and 'navigate' as dependencies
+  
+  
+  return (!userData) ? <p>Unauthorized</p> :
+ 
 
-  if (!userData) {
-    return <p>Unautorized</p>;
-  }
-
-  return (
-    <div class="flex items-center justify-center min-h-screen ">
-      <div class="max-w-lg p-8 bg-white rounded-lg shadow-lg">
-        <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">
+  
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="max-w-lg p-8 bg-white rounded-lg shadow-lg">
+        <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
           Profile
         </h1>
 
-        <div class="space-y-6">
-          <p class="text-xl text-gray-700">
-            <span class="font-semibold text-gray-900">Username:</span>{" "}
+        <div className="space-y-6">
+          <p className="text-xl text-gray-700">
+            <span className="font-semibold text-gray-900">Username:</span>{" "}
             {userData.username}
           </p>
-          <p class="text-xl text-gray-700">
-            <span class="font-semibold text-gray-900">Email:</span>{" "}
+          <p className="text-xl text-gray-700">
+            <span className="font-semibold text-gray-900">Email:</span>{" "}
             {userData.email}
           </p>
         </div>
       </div>
     </div>
-  );
 };
 
 export default Profile;
+
+  
