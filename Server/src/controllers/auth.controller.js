@@ -7,8 +7,10 @@ async function signup(req, res) {
     username: req.body.username,
     email: req.body.email,
 
-    // Hash the password with Argon2
-    password: await argon2.hash(req.body.password),
+    // Hash the password with Argon2id for salt hashing
+    password: await argon2.hash(req.body.password, {
+      type: argon2.argon2id,
+    }),
   });
   const refreshTokenDoc = models.RefreshToken({
     owner: userDoc.id,
@@ -31,21 +33,18 @@ async function login(req, res) {
     // Get username and password from the request body
     const { username, password } = req.body;
     // Find the user by username
-  
-    
-    
+
     const userDoc = await models.User.findOne({ username });
     if (!userDoc) {
-    
       return res.status(401).json({ message: "Invalid username or password" });
     }
-     
+
     // Verify the password
     const passwordMatch = await argon2.verify(userDoc.password, password);
     if (!passwordMatch) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
-   
+
     // Generate new refrshtoken tokens
     const refreshTokenDoc = await models.RefreshToken({
       owner: userDoc.id,
@@ -55,7 +54,7 @@ async function login(req, res) {
     const refreshToken = createRefreshToken(userDoc.id, refreshTokenDoc.id);
     const accessToken = createAccessToken(userDoc.id);
     // Send response with tokens
-     res.json({
+    res.json({
       id: userDoc.id,
       accessToken,
       refreshToken,
@@ -112,7 +111,7 @@ const validateRefreshToken = async (token) => {
 
   // Check if there was an error during decoding
   if (decodedToken.error) {
-    return decodedToken; 
+    return decodedToken;
   }
 
   // Check if the token exists in the database

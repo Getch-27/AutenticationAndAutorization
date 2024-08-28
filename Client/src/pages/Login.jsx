@@ -13,8 +13,7 @@ export default function Login() {
       e.preventDefault();
       try {
         const response = await axios.post('http://localhost:3000/api/auth/login', { username, password });
-          const accessToken = response.data.accessToken
-         localStorage.setItem('accessToken', response.data.accessToken);
+        const accessToken = response.data.accessToken
          localStorage.setItem('refreshToken', response.data.refreshToken);
          setToken(accessToken);
          navigate("/profile")

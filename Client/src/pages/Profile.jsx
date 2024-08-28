@@ -17,13 +17,11 @@ const Profile = () => {
             authorization: `Bearer ${token}`,
           },
         });
-        setUserData(response.data);
-        console.log(response);
-        
+        setUserData(response.data);  
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          // Token might be expired, handle refresh here
-          const refreshToken = localStorage.getItem('refreshToken'); // Assuming refresh token is still in localStorage
+          // handle token expiration error
+          const refreshToken = localStorage.getItem('refreshToken');
           if (refreshToken) {
             try {
               const tokenResponse = await axios.post('http://localhost:3000/api/auth/refreshToken', { refreshToken });
