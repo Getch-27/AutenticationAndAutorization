@@ -6,7 +6,8 @@ async function databaseConnect() {
     const dbuser = process.env.DB_USER;
     const password = encodeURIComponent(process.env.DB_PASSWORD);
     const dbName = process.env.DB_NAME;
-    const connectionString = `mongodb+srv://${dbuser}:${password}@auth.5rrd8.mongodb.net/?retryWrites=true&w=majority&appName=${dbName}`;
+    const connectionString = `mongodb+srv://${dbuser}:${password}@cluster0.kby06.mongodb.net/?retryWrites=true&w=majority&appName=${dbName}`;
+                              
     await mongoose.connect(connectionString, {
       serverSelectionTimeoutMS: 5000,
     });

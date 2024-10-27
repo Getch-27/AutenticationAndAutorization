@@ -2,13 +2,15 @@ const models = require("../models");
 
 const profile = async (req, res) => {
   try {
-    // find the user by ID 
+    
+
+    // Fetch user from the database using the userId from the request
     const userDoc = await models.User.findById(req.userId).exec();
     if (!userDoc) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-  
+    // Return user information
     return res.json({
       id: userDoc._id,
       username: userDoc.username,

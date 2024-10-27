@@ -1,34 +1,42 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
+const cookieParser = require("cookie-parser");
 const databaseConnect = require("./database");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 async function startServer() {
-  await databaseConnect(); // database connection
+  try {
+    await databaseConnect(); // Database connection
 
-  app.use( // handle CORS requests
-    cors({
-      origin: "http://localhost:5173",
-      methods: "GET,POST,PUT,DELETE,OPTIONS",
-      allowedHeaders: "Content-Type,Authorization",
-    })
-  );
+    app.use( // Handle CORS requests
+      cors({
+        origin: "http://localhost:5173",
+        methods: "GET,POST,PUT,DELETE,OPTIONS",
+        allowedHeaders: "Content-Type,Authorization",
+        credentials: true, 
+        httpOnly: true
+      })
+    );
 
-  app.use(express.json());
+    app.use(express.json());
+    app.use(cookieParser());
+    app.use("/api", routes);
 
-  app.use("/api", routes);
+    // Error handling middleware
+    app.use((err, req, res, next) => {
+      console.error(err); // Log the error details
+      res.status(err.status || 500).send({ error: err.message || "Internal Server Error" });
+    });
 
-  app.use((err, req, res) => {
-    console.log(err);
-    res.status(err.status || 500).send({ error: err.mesaage });
-  });
-
-  app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
-  });
+    app.listen(port, () => {
+      console.log(`Server listening at http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+  }
 }
 
 module.exports = startServer;

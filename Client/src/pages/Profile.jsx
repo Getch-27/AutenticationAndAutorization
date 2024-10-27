@@ -6,87 +6,80 @@ import { useToken } from "../context/TokenContext";
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const { token, setToken } = useToken();
-
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/users/profile",
-          {
-            headers: {
-              authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3000/api/users/profile", {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
         setUserData(response.data);
       } catch (error) {
         if (error.response?.status === 401) {
-          const refreshToken = localStorage.getItem("refreshToken");
-  
-          if (refreshToken) {
-            try {
-              const tokenResponse = await axios.post(
-                "http://localhost:3000/api/auth/refreshToken",
-                { refreshToken }
-              );
-  
-              // Ensure the new token is set before retrying the fetchProfile call
-              setToken(tokenResponse.data.accessToken);
-              console.log(tokenResponse.data.accessToken);
-  
-              // Retry fetching the profile with the new token
-              const newResponse = await axios.get(
-                "http://localhost:3000/api/users/profile",
-                {
-                  headers: {
-                    authorization: `Bearer ${tokenResponse.data.accessToken}`,
-                  },
-                }
-              );
-              setUserData(newResponse.data);
-            } catch (refreshError) {
-              console.error("Token refresh failed", refreshError);
-              navigate("/login");
-            }
-          } else {
-            navigate("/login");
-          }
+          await handleRefreshToken();
         } else {
           console.error("Profile fetch failed", error);
         }
       }
     };
-  
-    fetchProfile();
-  }, [token, navigate]); // 'token' and 'navigate' as dependencies
-  
-  
-  return (!userData) ? <p>Unauthorized</p> :
- 
 
-  
+    const handleRefreshToken = async () => {
+      try {
+       const tokenResponse = await axios.post(
+            "http://localhost:3000/api/auth/refreshToken",
+            {},
+            { withCredentials: true } // This sends cookies with the request
+        );
+
+        // Set the new access token in context
+        setToken(tokenResponse.data.accessToken);
+
+        // Retry fetching the profile with the new access token
+        fetchProfileWithNewToken(tokenResponse.data.accessToken);
+      } catch (refreshError) {
+        console.error("Token refresh failed", refreshError);
+        navigate("/login");
+      }
+    };
+
+    const fetchProfileWithNewToken = async (newAccessToken) => {
+      try {
+        const newResponse = await axios.get("http://localhost:3000/api/users/profile", {
+          headers: {
+            authorization: `Bearer ${newAccessToken}`,
+          },
+        });
+        setUserData(newResponse.data);
+      } catch (error) {
+        console.error("Profile fetch failed after refreshing token", error);
+        navigate("/login");
+      }
+    };
+
+    fetchProfile();
+  }, [token, setToken, navigate]);
+
+  return userData ? (
     <div className="flex items-center justify-center min-h-screen">
       <div className="max-w-lg p-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">
-          Profile
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">Profile</h1>
 
         <div className="space-y-6">
           <p className="text-xl text-gray-700">
-            <span className="font-semibold text-gray-900">Username:</span>{" "}
-            {userData.username}
+            <span className="font-semibold text-gray-900">Username:</span> {userData.username}
           </p>
           <p className="text-xl text-gray-700">
-            <span className="font-semibold text-gray-900">Email:</span>{" "}
-            {userData.email}
+            <span className="font-semibold text-gray-900">Email:</span> {userData.email}
           </p>
         </div>
       </div>
     </div>
+  ) : (
+    <p>Unauthorized</p>
+  );
 };
 
 export default Profile;
-
-  

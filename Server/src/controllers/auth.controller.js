@@ -1,73 +1,68 @@
 const jwt = require("jsonwebtoken");
 const models = require("../models");
 const argon2 = require("argon2");
-
+const bcrypt = require("bcrypt");
 async function signup(req, res) {
-  const userDoc = models.User({
-    username: req.body.username,
-    email: req.body.email,
+  const { username, email, password } = req.body;
 
-    // Hash the password with Argon2id for salt hashing
-    password: await argon2.hash(req.body.password, {
-      type: argon2.argon2id,
-    }),
-  });
-  const refreshTokenDoc = models.RefreshToken({
-    owner: userDoc.id,
-  });
-  await userDoc.save();
-  await refreshTokenDoc.save();
+  try {
+    // Check if user already exists
+    const existingUser = await models.User.findOne({ email });
+    if (existingUser) return res.status(400).json({ message: "User already exists." });
 
-  const refreshToken = createRefreshToken(userDoc.id, refreshTokenDoc.id);
-  const accessToken = createAccessToken(userDoc.id);
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-  res.json({
-    id: userDoc.id,
-    accessToken,
-    refreshToken,
-  });
+    // Create a new user instance
+    const newUser = models.User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    // Save user to the database
+    await newUser.save();
+
+    res.status(201).json({ message: "User registered successfully!" });
+  } catch (error) {
+    console.error("Signup Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 }
 
 async function login(req, res) {
+  const { username, password } = req.body;
+
   try {
-    // Get username and password from the request body
-    const { username, password } = req.body;
-    // Find the user by username
+    const user = await models.User.findOne({ username });
+    if (!user) return res.status(400).json({ message: "Invalid email or password." });
 
-    const userDoc = await models.User.findOne({ username });
-    if (!userDoc) {
-      return res.status(401).json({ message: "Invalid username or password" });
-    }
+   // const isMatch = await bcrypt.compare(password, user.password);
+    //if (!isMatch) return res.status(400).json({ message: "Invalid email or password." });
 
-    // Verify the password
-    const passwordMatch = await argon2.verify(userDoc.password, password);
-    if (!passwordMatch) {
-      return res.status(401).json({ message: "Invalid username or password" });
-    }
+    // Generate tokens
+    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
+    const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 
-    // Generate new refrshtoken tokens
-    const refreshTokenDoc = await models.RefreshToken({
-      owner: userDoc.id,
-    });
+    // Set the refresh token in an HTTP-only cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true, // This makes the cookie inaccessible to JavaScript
+      secure: true, // Set to true in production if using HTTPS
+      sameSite: "Strict", // Adjust based on your needs
+      maxAge: 24 * 60 * 60 * 1000, // Cookie expiry time (1 day)
+  })
+      .json({ accessToken });
 
-    await refreshTokenDoc.save();
-    const refreshToken = createRefreshToken(userDoc.id, refreshTokenDoc.id);
-    const accessToken = createAccessToken(userDoc.id);
-    // Send response with tokens
-    res.json({
-      id: userDoc.id,
-      accessToken,
-      refreshToken,
-    });
-  } catch (err) {
-    console.error("Error during login:", err);
-    res.status(500).json({ message: "Internal server error" });
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 }
 
 async function newRefreshToken(req, res) {
   const validationResult = await validateRefreshToken(req.body.refreshToken);
-
+   
   // Check if validation returned an error
   if (validationResult.error) {
     return res
@@ -97,13 +92,14 @@ async function newRefreshToken(req, res) {
     refreshToken,
   });
 }
+
 const validateRefreshToken = async (token) => {
   const decodeToken = () => {
     try {
       return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
     } catch (err) {
-      // Return an error  if token verification
-      return { error: true, statusCode: 401, message: "Unauthorized" };
+      // Return an error if token verification fails
+      return { error: true, message: "Unauthorized" };
     }
   };
 
@@ -114,28 +110,27 @@ const validateRefreshToken = async (token) => {
     return decodedToken;
   }
 
-  // Check if the token exists in the database
-  const tokenExists = await models.RefreshToken.exists({
-    _id: decodedToken.tokenId,
-    owner: decodedToken.userId,
-  });
+  
+  const userId = decodedToken.userId;
 
-  if (tokenExists) {
-    return decodedToken;
-  } else {
-    // Return an error object if the token does not exist
-    return { error: true, statusCode: 401, message: "Unauthorized" };
+  
+  const userDoc = await models.User.findById(userId).exec();
+  if (!userDoc) {
+    return { error: true, statusCode: 404, message: "User not found" };
   }
+
+  // Return the decoded token 
+  return { valid: true, userId: userId }; 
 };
 
 async function newAccessToken(req, res) {
-  const refreshToken = await validateRefreshToken(req.body.refreshToken);
+  //const refreshToken= req.cookies.refreshToken;
+  const refreshToken = await validateRefreshToken(req.cookies.refreshToken);
   const accessToken = createAccessToken(refreshToken.userId);
-
+  
   res.json({
     id: refreshToken.userId,
     accessToken,
-    refreshToken: req.body.refreshToken,
   });
 }
 
@@ -144,7 +139,7 @@ function createAccessToken(userId) {
     {
       userId: userId,
     },
-    process.env.ACCESS_TOKEN_SECRET,
+    process.env.JWT_SECRET,
     {
       expiresIn: "10m",
     }
