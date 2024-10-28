@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useToken } from "../context/TokenContext";
-import Loader from "../complonents/Loading";
+import Loader from "../components/Loading";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
