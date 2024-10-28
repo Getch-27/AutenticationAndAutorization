@@ -78,13 +78,14 @@ async function googleCallback(req, res) {
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
-    // Send the access token to the client
-    res.json({ accessToken });
+    // Redirect to the client profile page
+    res.redirect(`http://localhost:5173/profile?accessToken=${accessToken}`);
   } catch (error) {
     console.error("Error during OAuth callback", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
 
 async function login(req, res) {
   const { username, password } = req.body;

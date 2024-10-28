@@ -4,38 +4,44 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const Signup = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [formData, setFormData] = useState({ username: "", email: "", password: "" });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/auth/signup", {
-        username,
-        password,
-        email,
-      });
+      await axios.post("http://localhost:3000/api/auth/signup", formData);
       navigate("/login");
     } catch (error) {
-      console.error("Signup failed", error);
-      alert("Signup failed");
+      console.error("Signup failed:", error);
+      setError("Signup failed. Please try again.");
     }
   };
 
   const handleGoogleSignIn = () => {
-    const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID; // Replace with your Google Client ID
-    const redirectUri = "http://localhost:3000/api/auth/google/callback"; // Your redirect URI
+    const googleClientId = "639193218184-d7k3tn0iisg0c3hprfhqj382ra0jgl4f.apps.googleusercontent.com"; // Replace with your Google Client ID
+    const redirectUri = "http://localhost:3000/api/auth/google/callback";
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid email profile`;
 
     window.location.href = googleAuthUrl; // Redirect user to Google for authentication
   };
 
   return (
-    <div className="flex items-center justify-center max-w-md mx-auto mt-10 p-6 ">
+    <div className="flex items-center justify-center max-w-md mx-auto mt-10 p-6">
       <form onSubmit={handleSubmit} className="w-96 p-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Signup</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Sign Up</h1>
+
+        {error && (
+          <div className="mb-4 p-2 text-red-600 bg-red-100 border border-red-400 rounded-lg">
+            {error}
+          </div>
+        )}
 
         <div className="mb-4">
           <label htmlFor="username" className="block text-gray-700 text-sm font-semibold mb-2">
@@ -44,10 +50,11 @@ const Signup = () => {
           <input
             id="username"
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={formData.username}
+            onChange={handleInputChange}
             placeholder="Enter your username"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            required
           />
         </div>
 
@@ -57,11 +64,12 @@ const Signup = () => {
           </label>
           <input
             id="email"
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            value={formData.email}
+            onChange={handleInputChange}
             placeholder="Enter your email"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            required
           />
         </div>
 
@@ -72,10 +80,11 @@ const Signup = () => {
           <input
             id="password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleInputChange}
             placeholder="Enter your password"
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            required
           />
         </div>
 
@@ -83,7 +92,7 @@ const Signup = () => {
           type="submit"
           className="w-full py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
         >
-          Signup
+          Sign Up
         </button>
 
         <button
@@ -97,7 +106,9 @@ const Signup = () => {
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-500 hover:underline">Login</Link>
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Login
+            </Link>
           </p>
         </div>
       </form>
