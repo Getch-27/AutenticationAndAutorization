@@ -38,12 +38,12 @@ async function login(req, res) {
     const user = await models.User.findOne({ username });
     if (!user) return res.status(400).json({ message: "Invalid email or password." });
 
-   // const isMatch = await bcrypt.compare(password, user.password);
-    //if (!isMatch) return res.status(400).json({ message: "Invalid email or password." });
+   const isMatch = await bcrypt.compare(password, user.password);
+   if (!isMatch) return res.status(400).json({ message: "Invalid email or password." });
 
     // Generate tokens
-    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
-    const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1m" });
+    const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1m" });
 
     // Set the refresh token in an HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {

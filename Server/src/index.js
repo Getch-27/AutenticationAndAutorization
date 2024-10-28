@@ -25,9 +25,8 @@ async function startServer() {
     app.use(cookieParser());
     app.use("/api", routes);
 
-    // Error handling middleware
     app.use((err, req, res, next) => {
-      console.error(err); // Log the error details
+      console.error(err);
       res.status(err.status || 500).send({ error: err.message || "Internal Server Error" });
     });
 
