@@ -76,7 +76,7 @@ async function googleCallback(req, res) {
     // Set the refresh token as an HttpOnly cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Set secure to true in production
+      secure: true, // Set secure to true in production
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
