@@ -61,7 +61,7 @@ async function googleCallback(req, res) {
       user = await models.User.create({
         username: userData.name,
         email: userData.email,
-        // Add any other necessary fields
+        profile: userData.picture,
       });
     }
 

@@ -15,6 +15,7 @@ const profile = async (req, res) => {
       id: userDoc._id,
       username: userDoc.username,
       email: userDoc.email,
+      profile: userDoc.profile
     });
 
   } catch (err) {

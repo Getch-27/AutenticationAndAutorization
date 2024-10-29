@@ -59,6 +59,7 @@ const Profile = () => {
           },
         });
         setUserData(newResponse.data);
+        //console.log(newResponse.data);
       } catch (error) {
         console.error("Profile fetch failed after refreshing token", error);
         navigate("/login");
@@ -85,7 +86,7 @@ const Profile = () => {
       <div className="w-24 h-24 mb-4">
         <img
           className="rounded-full border-4 border-blue-400 shadow-sm"
-          src={userData.profilePicture || "https://via.placeholder.com/150"}
+          src={userData.profile || "https://via.placeholder.com/150"}
           alt="User Profile"
         />
       </div>
