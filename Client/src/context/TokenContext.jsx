@@ -1,14 +1,13 @@
 import React, { createContext, useState, useContext } from 'react';
 
-// Create the TokenContext
+// TokenContext
 const TokenContext = createContext(null);
 
-// Create a custom hook to use the TokenContext
 export const useToken = () => {
   return useContext(TokenContext);
 };
 
-// Create a provider component
+//provider component
 export const TokenProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 

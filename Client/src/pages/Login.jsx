@@ -18,7 +18,6 @@ export default function Login() {
         password,
       });
 
-      // Assuming the response contains the access token
       const accessToken = response.data.accessToken;
       setToken(accessToken); // Set the access token in context
       navigate("/profile"); // Redirect to profile page

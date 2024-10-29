@@ -79,20 +79,32 @@ const Profile = () => {
   }
 
   return userData ? (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="max-w-lg p-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center">Profile</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-slate-400 to-slate-800">
+  <div className="max-w-lg p-8 bg-white rounded-xl shadow-lg transform transition hover:scale-105 duration-300 ease-in-out">
+    <div className="flex flex-col items-center">
+      <div className="w-24 h-24 mb-4">
+        <img
+          className="rounded-full border-4 border-blue-400 shadow-sm"
+          src={userData.profilePicture || "https://via.placeholder.com/150"}
+          alt="User Profile"
+        />
+      </div>
 
-        <div className="space-y-6">
-          <p className="text-xl text-gray-700">
-            <span className="font-semibold text-gray-900">Username:</span> {userData.username}
-          </p>
-          <p className="text-xl text-gray-700">
-            <span className="font-semibold text-gray-900">Email:</span> {userData.email}
-          </p>
-        </div>
+      <h1 className="text-4xl font-bold text-gray-800 mb-4 text-center">Hello, {userData.username}!</h1>
+      <p className="text-gray-500 text-center text-sm mb-6">Welcome back to your profile.</p>
+
+      <div className="space-y-4 text-center">
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold text-gray-900">Username:</span> {userData.username}
+        </p>
+        <p className="text-lg text-gray-700">
+          <span className="font-semibold text-gray-900">Email:</span> {userData.email}
+        </p>
       </div>
     </div>
+  </div>
+</div>
+
   ) : (
     <p>Unauthorized</p>
   );

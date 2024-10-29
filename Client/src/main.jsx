@@ -3,12 +3,10 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Profile from "./pages/Profile"; // Ensure the component name matches the filename
+import Profile from "./pages/Profile"; 
 import { TokenProvider } from "./context/TokenContext";
 import "./index.css";
-import GoogleCallback from "./pages/googleCallback";
 
-// Define the router with the correct paths
 const router = createBrowserRouter([
   {
     path: "/",

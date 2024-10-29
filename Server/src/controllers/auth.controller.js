@@ -3,10 +3,11 @@ const models = require("../models");
 const bcrypt = require("bcrypt");
 const { OAuth2Client } = require("google-auth-library");
 
-
+//google 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_REDIRECT_URI  = process.env.GOOGLE_REDIRECT_URI
+
 const oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, GOOGLE_REDIRECT_URI);
 
 async function signup(req, res) {
@@ -51,6 +52,7 @@ async function googleCallback(req, res) {
     });
 
     const userData = userInfoResponse.data;
+    console.log(userData);
 
     // Check if the user already exists in the database
     let user = await models.User.findOne({ email: userData.email });
