@@ -23,10 +23,6 @@ const router = createBrowserRouter([
     element: <Signup />,
   },
   {
-    path: "http://localhost:3000/api/auth/google/callback", // Update this to the relative path
-    element: <GoogleCallback />, // Add your GoogleCallback component here
-  },
-  {
     path: "/profile",
     element: <Profile />,
   },

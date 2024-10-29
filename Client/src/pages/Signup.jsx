@@ -25,7 +25,7 @@ const Signup = () => {
   };
 
   const handleGoogleSignIn = () => {
-    const googleClientId = "639193218184-d7k3tn0iisg0c3hprfhqj382ra0jgl4f.apps.googleusercontent.com"; // Replace with your Google Client ID
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; // Replace with your Google Client ID
     const redirectUri = "http://localhost:3000/api/auth/google/callback";
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid email profile`;
 

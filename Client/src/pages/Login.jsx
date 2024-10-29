@@ -27,7 +27,16 @@ export default function Login() {
       alert("Login failed: " + (error.response?.data.message || "Unknown error"));
     }
   };
-  
+
+  const handleGoogleSignIn = () => {
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; 
+    const redirectUri = "http://localhost:3000/api/auth/google/callback";
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid email profile`;
+
+    // Redirect to Google for authentication
+    window.location.href = googleAuthUrl;
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -74,6 +83,14 @@ export default function Login() {
         className="w-full py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
       >
         Login
+      </button>
+
+      <button
+        type="button"
+        onClick={handleGoogleSignIn}
+        className="w-full mt-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+      >
+        LOG in with Google
       </button>
 
       <div className="mt-4 text-center">
