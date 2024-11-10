@@ -4,10 +4,8 @@ on:
   push:
     branches:
       - "main"
-      - "development"
 
 jobs:
-  # Job for Preview Deployment on non-main branches
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
