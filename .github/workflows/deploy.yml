@@ -58,10 +58,14 @@ jobs:
     needs: check-backend-changes
     if: needs.check-backend-changes.outputs.backend_changed == 'true'
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Deploy Backend to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run:
+        run: |
+          cd Server
           npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
 
   deploy-frontend:
@@ -69,8 +73,12 @@ jobs:
     needs: check-frontend-changes
     if: needs.check-frontend-changes.outputs.frontend_changed == 'true'
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Deploy Frontend to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run:
+        run: |
+          cd Client
           npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
