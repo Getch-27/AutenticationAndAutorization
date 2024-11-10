@@ -6,7 +6,7 @@ on:
       - master
       - development
     paths:
-      - 'backend/**'
+      - 'Server/**'
   pull_request:
     branches:
       - master
