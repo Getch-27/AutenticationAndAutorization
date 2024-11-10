@@ -7,7 +7,7 @@ on:
   push:
     branches: [ "master" , "development"]
     paths:
-      - 'Frontend/**'
+      - 'Client/**'
   pull_request:
     branches: [ "master" , "development"]
     paths:
