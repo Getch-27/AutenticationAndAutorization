@@ -7,11 +7,11 @@ on:
   push:
     branches: [ "master" , "development"]
     paths:
-      - 'Frontend/**'
+      - 'Client/**'
   pull_request:
     branches: [ "master" , "development"]
     paths:
-      - 'Frontend/**'
+      - 'Client/**'
 jobs:
   test-frontend:
     runs-on: ubuntu-latest
@@ -31,11 +31,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd frontend
+          cd Client
           npm install
 
       - name: Run frontend tests with Vitest
         run: |
-          cd Frontend
+          cd Client
           npm run test -- --watch=false
     

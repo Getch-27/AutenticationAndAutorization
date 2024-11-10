@@ -6,13 +6,13 @@ on:
       - master
       - development
     paths:
-      - 'backend/**'
+      - 'Server/**'
   pull_request:
     branches:
       - master
       - development
     paths:
-      - 'backend/**'
+      - 'Server/**'
 
 jobs:
   test-backend:
@@ -33,10 +33,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
+          cd Server
           npm install
 
       - name: Run backend tests
         run: |
-          cd backend
+          cd Server
           npm test
