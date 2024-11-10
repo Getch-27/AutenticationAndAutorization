@@ -2,23 +2,10 @@ name: Deploy
 
 on:
   push:
-    branches:
+    branches: 
       - "master"
 
 jobs:
-  Deploy-Preview:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build Project Artifacts
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
-
   check-backend-changes:
     runs-on: ubuntu-latest
     outputs:
@@ -30,10 +17,10 @@ jobs:
       - name: Check for backend changes
         id: check_backend
         run: |
-          # Fetch previous commit
+          # Ensure we have access to previous commits
           git fetch --depth=2
           
-          # Check for changes in 'Server' directory
+          # Check if any backend files have changed
           if git diff --name-only HEAD~1 HEAD | grep -q '^Server/'; then
             echo "changed=true" >> $GITHUB_ENV
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -54,10 +41,10 @@ jobs:
       - name: Check for frontend changes
         id: check_frontend
         run: |
-          # Fetch previous commit
+          # Ensure we have access to previous commits
           git fetch --depth=2
 
-          # Check for changes in 'Client' directory
+          # Check if any frontend files have changed
           if git diff --name-only HEAD~1 HEAD | grep -q '^Client/'; then
             echo "changed=true" >> $GITHUB_ENV
             echo "changed=true" >> $GITHUB_OUTPUT
@@ -77,11 +64,9 @@ jobs:
       - name: Deploy Backend to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_PROJECT_ID: ${{ secrets.SERVER_VERCEL_PROJECT_ID }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
           cd Server
-          npx vercel --prod --token $VERCEL_TOKEN
+          npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
 
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -94,8 +79,6 @@ jobs:
       - name: Deploy Frontend to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_PROJECT_ID: ${{ secrets.REACT_VERCEL_PROJECT_ID }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
           cd Client
-          npx vercel --prod --token $VERCEL_TOKEN
+          npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
