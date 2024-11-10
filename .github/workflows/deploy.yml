@@ -83,4 +83,4 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
         run: |
           cd Client
-          npx vercel --prod --token $VERCEL_TOKEN --project $VERCEL_PROJECT_ID --confirm
+          npx vercel --prod --token $VERCEL_TOKEN --project-id $VERCEL_PROJECT_ID --confirm
