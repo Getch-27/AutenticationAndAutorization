@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 
-// TokenContext
+// TokenConte
 const TokenContext = createContext(null);
 
 export const useToken = () => {
