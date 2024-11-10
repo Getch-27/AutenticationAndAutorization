@@ -83,6 +83,5 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_PROJECT_ID: ${{ secrets.REACT_VERCEL_PROJECT_ID }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        run: |
-          cd Client
-          npx vercel --prod --token $VERCEL_TOKEN --project-id $VERCEL_PROJECT_ID --org-id $VERCEL_ORG_ID
+        run: 
+          npx vercel --prod --token $VERCEL_TOKEN
