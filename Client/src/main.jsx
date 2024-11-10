@@ -31,5 +31,5 @@ root.render(
     <TokenProvider>
       <RouterProvider router={router} />
     </TokenProvider>
-  </React.StrictMode>///
+  </React.StrictMode>
 );
