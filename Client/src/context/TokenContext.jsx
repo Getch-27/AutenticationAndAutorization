@@ -7,7 +7,7 @@ export const useToken = () => {
   return useContext(TokenContext);
 };
 
-//provider component
+//provider componen
 export const TokenProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
