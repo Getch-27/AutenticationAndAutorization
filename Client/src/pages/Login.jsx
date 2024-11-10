@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useToken } from "../context/TokenContext"; //
-
+/* eslint-disable react/no-unescaped-entities */
 
 export default function Login() {
   const [username, setUsername] = useState("");

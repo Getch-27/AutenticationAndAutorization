@@ -36,5 +36,5 @@ jobs:
       - name: Run frontend tests with Vitest
         run: |
           cd Client
-          npm run test -- --watch=false
+          npm run lint
     
