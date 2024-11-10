@@ -13,7 +13,7 @@ async function startServer() {
     await databaseConnect(); // Database connection
 
     const corsOptions = {
-      origin: process.env.CLIENT_URL || "http://localhost:5173", // Set client URL for CORS
+      origin: "https://autentication-and-autorization.vercel.app" || "http://localhost:5173", // Set client URL for CORS
       methods: "GET,POST,PUT,DELETE,OPTIONS",
       allowedHeaders: "Content-Type,Authorization",
       credentials: true,
