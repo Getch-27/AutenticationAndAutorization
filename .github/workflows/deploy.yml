@@ -81,4 +81,5 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
           cd Client
+          output: VERCEL_TOKEN
           npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
