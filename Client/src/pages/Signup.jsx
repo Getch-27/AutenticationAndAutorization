@@ -16,7 +16,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/auth/signup", formData);
+      await axios.post("https://autentication-server.vercel.app/api/auth/signup", formData);
       navigate("/login");
     } catch (error) {
       console.error("Signup failed:", error);
@@ -26,7 +26,7 @@ const Signup = () => {
 
   const handleGoogleSignIn = () => {
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; 
-    const redirectUri = "http://localhost:3000/api/auth/google/callback";
+    const redirectUri = "https://autentication-server.vercel.app/api/auth/google/callback";
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid email profile`;
 
     window.location.href = googleAuthUrl; // Redirect user to Google for authentication

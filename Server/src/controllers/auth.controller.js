@@ -81,7 +81,7 @@ async function googleCallback(req, res) {
     });
 
     // Redirect to the client profile page
-    res.redirect(`http://localhost:5173/profile?accessToken=${accessToken}`);
+    res.redirect(`https://autentication-and-autorization.vercel.app/profile?accessToken=${accessToken}`);
   } catch (error) {
     console.error("Error during OAuth callback", error);
     res.status(500).json({ error: "Internal Server Error" });

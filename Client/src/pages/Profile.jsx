@@ -14,7 +14,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true); // Set loading to true when starting fetch
-        const response = await axios.get("http://localhost:3000/api/users/profile", {
+        const response = await axios.get("https://autentication-server.vercel.app/api/users/profile", {
           headers: {
             authorization: `Bearer ${token}`,
           },
@@ -34,7 +34,7 @@ const Profile = () => {
     const handleRefreshToken = async () => {
       try {
         const tokenResponse = await axios.post(
-          "http://localhost:3000/api/auth/refreshToken",
+          "https://autentication-server.vercel.app/api/auth/refreshToken",
           {},
           { withCredentials: true } // This sends cookies with the request
         );
@@ -53,7 +53,7 @@ const Profile = () => {
     const fetchProfileWithNewToken = async (newAccessToken) => {
       try {
         setLoading(true); // Set loading to true when starting fetch
-        const newResponse = await axios.get("http://localhost:3000/api/users/profile", {
+        const newResponse = await axios.get("https://autentication-server.vercel.app/api/users/profile", {
           headers: {
             authorization: `Bearer ${newAccessToken}`,
           },

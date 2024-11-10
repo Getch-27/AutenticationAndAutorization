@@ -13,7 +13,7 @@ export default function Login() {
     axios.defaults.withCredentials = true;
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", {
+      const response = await axios.post("https://autentication-server.vercel.app/api/auth/login", {
         username,
         password,
       });
@@ -29,7 +29,7 @@ export default function Login() {
 
   const handleGoogleSignIn = () => {
     const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID; 
-    const redirectUri = "http://localhost:3000/api/auth/google/callback";
+    const redirectUri = "https://autentication-server.vercel.app/api/auth/google/callback";
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid email profile`;
 
     // Redirect to Google for authentication
