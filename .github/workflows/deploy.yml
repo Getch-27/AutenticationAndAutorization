@@ -16,7 +16,7 @@ jobs:
       - name: Check for backend changes
         id: check_backend
         run: |
-          if git diff --name-only HEAD^ HEAD | grep -q '^backend/'; then
+          if git diff --name-only HEAD^ HEAD | grep -q '^Server/'; then
             echo "changed=true" >> $GITHUB_ENV
           else
             echo "changed=false" >> $GITHUB_ENV
@@ -36,7 +36,7 @@ jobs:
       - name: Check for frontend changes
         id: check_frontend
         run: |
-          if git diff --name-only HEAD^ HEAD | grep -q '^frontend/'; then
+          if git diff --name-only HEAD^ HEAD | grep -q '^Client/'; then
             echo "changed=true" >> $GITHUB_ENV
           else
             echo "changed=false" >> $GITHUB_ENV
