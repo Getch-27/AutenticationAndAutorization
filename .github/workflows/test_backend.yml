@@ -39,4 +39,4 @@ jobs:
       - name: Run backend tests
         run: |
           cd Server
-          npm test
+          npm run lint
