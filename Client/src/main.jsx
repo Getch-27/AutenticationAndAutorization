@@ -6,7 +6,6 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile"; 
 import { TokenProvider } from "./context/TokenContext";
 import "./index.css";
-////
 const router = createBrowserRouter([
   {
     path: "/",
