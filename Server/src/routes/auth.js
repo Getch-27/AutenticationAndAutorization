@@ -7,5 +7,4 @@ router.post("/login", controller.auth.login);
 router.post("/refreshToken", controller.auth.newAccessToken);
 router.get("/google/callback", controller.auth.googleCallback);
 
-module.exports = router;
-///
+/module.exports = router;
