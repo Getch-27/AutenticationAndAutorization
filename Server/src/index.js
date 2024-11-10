@@ -3,7 +3,7 @@ const cors = require("cors");
 const routes = require("./routes");
 const cookieParser = require("cookie-parser");
 const databaseConnect = require("./database");
-require("dotenv").config(); // Load environment variables
+require("dotenv").config(); // Load environment variable
 
 const app = express();
 const port = process.env.PORT || 3000;
