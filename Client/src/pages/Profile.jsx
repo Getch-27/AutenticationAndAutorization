@@ -6,7 +6,7 @@ import Loader from "../components/Loading";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true); // New loading stateee
   const { token, setToken } = useToken();
   const navigate = useNavigate();
 
